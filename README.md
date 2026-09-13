@@ -1,9 +1,9 @@
 # HOMEWORK 1
 ## Equipe:
-- João Victor Carneiro de Oliveira - 569678
-- Leonardo Dayvison Silva de Almeida Teixeira - 566868
-- Ludmila Maria Pires de Oliveira - 565758
-- Maria Lissa Rodrigues Costa - 565974
+- João Victor Carneiro de Oliveira
+- Leonardo Dayvison Silva de Almeida Teixeira
+- Ludmila Maria Pires de Oliveira
+- Maria Lissa Rodrigues Costa
 
 
 ## Configuração inicial do ambiente
