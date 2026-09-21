@@ -1,4 +1,4 @@
-# HOMEWORK 1
+# ACI HOMEWORKS
 ## Equipe:
 - João Victor Carneiro de Oliveira
 - Leonardo Dayvison Silva de Almeida Teixeira
