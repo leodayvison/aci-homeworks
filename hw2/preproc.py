@@ -126,25 +126,28 @@ if __name__ == '__main__':
         print(f"  {col:<25}: r = {r_val:+.4f}")
 
     # 3. Gráficos para o Artigo
-    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
 
-    # Heatmap de correlação entre preditores
-    cax = axes[0].matshow(corr_matrix, cmap='coolwarm', vmin=-1, vmax=1)
-    fig.colorbar(cax, ax=axes[0], fraction=0.046, pad=0.04)
-    axes[0].set_xticks(range(len(corr_matrix.columns)))
-    axes[0].set_yticks(range(len(corr_matrix.columns)))
-    axes[0].set_xticklabels(corr_matrix.columns, rotation=90, fontsize=9)
-    axes[0].set_yticklabels(corr_matrix.columns, fontsize=9)
-    axes[0].set_title('Matriz de Correlação dos Preditores', pad=20, fontsize=12, fontweight='bold')
+    # --- Janela 1: Heatmap de correlação entre preditores ---
+    fig1, ax1 = plt.subplots(figsize=(8, 8))
+    cax = ax1.matshow(corr_matrix, cmap='coolwarm', vmin=-1, vmax=1)
+    fig1.colorbar(cax, ax=ax1, fraction=0.046, pad=0.04)
+    ax1.set_xticks(range(len(corr_matrix.columns)))
+    ax1.set_yticks(range(len(corr_matrix.columns)))
+    ax1.set_xticklabels(corr_matrix.columns, rotation=90, fontsize=9)
+    ax1.set_yticklabels(corr_matrix.columns, fontsize=9)
+    ax1.set_title('Matriz de Correlação dos Preditores', pad=20, fontsize=12, fontweight='bold')
+    fig1.tight_layout()
 
-    # Gráfico de barras: correlação com a variável alvo
+    # --- Janela 2: Gráfico de barras: correlação com a variável alvo ---
+    fig2, ax2 = plt.subplots(figsize=(8, 6))
     y_corr_sorted = y_corr.sort_values()
     colors = ['crimson' if val < 0 else 'forestgreen' for val in y_corr_sorted]
-    axes[1].barh(y_corr_sorted.index, y_corr_sorted.values, color=colors, edgecolor='black', alpha=0.8)
-    axes[1].axvline(0, color='black', linewidth=1)
-    axes[1].set_xlabel('Coeficiente de Correlação de Pearson com a Qualidade', fontsize=10)
-    axes[1].set_title('Correlação Individual Preditor-Desfecho', fontsize=12, fontweight='bold')
-    axes[1].grid(True, linestyle='--', alpha=0.6, axis='x')
+    ax2.barh(y_corr_sorted.index, y_corr_sorted.values, color=colors, edgecolor='black', alpha=0.8)
+    ax2.axvline(0, color='black', linewidth=1)
+    ax2.set_xlabel('Coeficiente de Correlação de Pearson com a Qualidade', fontsize=10)
+    ax2.set_title('Correlação Individual Preditor-Desfecho', fontsize=12, fontweight='bold')
+    ax2.grid(True, linestyle='--', alpha=0.6, axis='x')
+    fig2.tight_layout()
 
-    plt.tight_layout()
+    # Exibe as janelas simultaneamente
     plt.show()
