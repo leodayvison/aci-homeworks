@@ -1,32 +1,20 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split, KFold
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
+from sklearn.model_selection import KFold
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_squared_error, r2_score
 import warnings
 warnings.filterwarnings('ignore')
 
+# Importa o pré-processamento padronizado (log1p + StandardScaler + PCA com 90% variância)
+try:
+    from preproc import load_and_preprocess_data
+except ImportError:
+    from hw2.preproc import load_and_preprocess_data
 
-#CARREGAMENTO E PRÉ-PROCESSAMENTO
-df = pd.read_csv('winequality-white.csv')
-
-X = df.iloc[:, :-1].values
-y = df.iloc[:, -1].values
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-
-# Redução de dimensionalidade (Preditores transformados exigidos pela questão)
-n_comp = min(10, X_train_scaled.shape[1]) 
-pca = PCA(n_components=n_comp, random_state=42)
-X_train_transf = pca.fit_transform(X_train_scaled)
-X_test_transf = pca.transform(X_test_scaled)
+X_train_scaled, X_test_scaled, X_train_transf, X_test_transf, y_train, y_test, pca, scaler = load_and_preprocess_data(
+    pca_variance=0.90, as_numpy=True
+)
 
 
 #FUNÇÕES DA REGRESSÃO RIDGE (L2) DO ZERO

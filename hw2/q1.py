@@ -1,35 +1,16 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split, KFold
-from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import KFold
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 
-csv_filename = 'winequality-white.csv' 
-
+# Importa o pré-processamento padronizado (log1p para assimetria + StandardScaler)
 try:
-    df = pd.read_csv(csv_filename, sep=';')
-except FileNotFoundError:
-    print(f"Erro: O arquivo '{csv_filename}' não foi encontrado na pasta atual.")
-    exit()
+    from preproc import load_and_preprocess_data
+except ImportError:
+    from hw2.preproc import load_and_preprocess_data
 
-# A última coluna é o alvo (quality - Y) e as demais os preditores (X).
-X = df.iloc[:, :-1].values
-y = df.iloc[:, -1].values
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-'''
-O mesmo pré-processamento exigido para treino e teste:
-A padronização transforma os preditores para que tenham média igual a zero e variância igual a um. 
-O código calcula a média e o desvio padrão exclusivamente no conjunto de treinamento (fit_transform) 
-e usa esses exatos parâmetros para escalar o conjunto de teste (transform). 
-Isso garante que não haja vazamento de informações (data leakage) do teste para o modelo.
-'''
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+X_train_scaled, X_test_scaled, _, _, y_train, y_test, _, _ = load_and_preprocess_data(pca_variance=None, as_numpy=True)
 
 
 #DEFINIÇÃO DAS FUNÇÕES (DO ZERO)
