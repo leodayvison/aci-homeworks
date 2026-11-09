@@ -15,7 +15,14 @@ _, _, X_train_transf, X_test_transf, y_train, y_test, pca, scaler = load_and_pre
     pca_variance=0.90, as_numpy=True
 )
 
-# 4. Construção e Treinamento do Modelo de Rede Neural (MLP)
+'''A instância mlp = MLPRegressor(...) constrói o modelo não linear. 
+O uso de hidden_layer_sizes=(64, 32) cria uma arquitetura profunda. 
+O hiperparâmetro crítico aqui é activation='relu', que é a função matemática 
+responsável por quebrar a linearidade do modelo, permitindo que ele aprenda padrões 
+complexos. Parâmetros como alpha=0.01 (regularização L2) e early_stopping=True garantem 
+que o modelo não decore os dados de treino (overfitting).'''
+
+#Construção e Treinamento do Modelo de Rede Neural (MLP)
 # Arquitetura: 2 camadas ocultas com 64 e 32 neurônios, ativação ReLU
 mlp = MLPRegressor(
     hidden_layer_sizes=(64, 32), 
@@ -42,7 +49,7 @@ print(f"RMSE no Teste: {rmse_test:.4f}")
 print(f"R2 no Teste:   {r2_test:.4f}")
 print("-" * 50)
 
-# 6. Geração de Gráficos
+#Gráficos
 plt.figure(figsize=(14, 6))
 
 # Gráfico 1: Curva de Aprendizado (Loss Curve)
@@ -55,7 +62,8 @@ plt.ylabel('Loss (Erro Quadrático)')
 plt.legend()
 plt.grid(True)
 
-# Gráfico 2: Valores Reais vs Preditos no Teste
+
+# Gráfico 2 (opcional): Valores Reais vs Preditos no Teste
 plt.subplot(1, 2, 2)
 plt.scatter(y_test, y_pred_test, alpha=0.5, edgecolors='k', color='purple', label='Previsões NN')
 # Linha de acerto perfeito

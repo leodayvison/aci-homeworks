@@ -14,12 +14,11 @@ except ImportError:
 
 X_train_scaled, X_test_scaled, _, _, y_train, y_test, _, _ = load_and_preprocess_data(pca_variance=None, as_numpy=True)
 
-# Determinar o número máximo de componentes a testar
-# Não pode ser maior que o número de features ou o número de amostras
+#Determinar o número máximo de componentes a testar, não pode ser maior que o número de features ou o número de amostras
 max_components = min(X_train_scaled.shape[1], X_train_scaled.shape[0])
 components_range = np.arange(1, max_components + 1)
 
-# 4. Validação Cruzada K-Fold (5 vias) no conjunto de TREINAMENTO
+#Validação Cruzada K-Fold (5 vias) no conjunto de TREINAMENTO
 K = 5
 kf = KFold(n_splits=K, shuffle=True, random_state=42)
 
@@ -30,6 +29,10 @@ print("Iniciando Validação Cruzada para encontrar o número ideal de component
 
 # Loop sobre os diferentes números de componentes do PLS
 for n_comp in components_range:
+    '''O PLS costuma ser superior ao PCR em problemas supervisionados, 
+    pois enquanto o PCR busca componentes apenas olhando para a variância 
+    dos dados X, o PLS busca componentes que explicam a variância de X e que, 
+    ao mesmo tempo, têm alta correlação com a variável alvo Y'''
     pls = PLSRegression(n_components=n_comp)
     fold_rmse = []
     fold_r2 = []
@@ -57,7 +60,9 @@ for n_comp in components_range:
     cv_rmse.append(np.mean(fold_rmse))
     cv_r2.append(np.mean(fold_r2))
 
-# 5. Determinar o número ideal de componentes (Aquele que minimiza o RMSE na validação)
+#Determinar o número ideal de componentes (Aquele que minimiza o RMSE na validação)
+'''automatiza a escolha da melhor arquitetura para o modelo PLS, o código faz a escolha 
+baseada estritamente no menor RMSE gerado pela Validação Cruzada.'''
 best_idx = np.argmin(cv_rmse)
 best_n_components = components_range[best_idx]
 best_cv_rmse = cv_rmse[best_idx]
@@ -67,7 +72,7 @@ print(f"Número ideal de componentes escolhido: {best_n_components}")
 print(f"RMSE mínimo na Validação Cruzada: {best_cv_rmse:.4f}")
 print("-" * 50)
 
-# 6. Avaliação Final no Conjunto de Teste (Usando o melhor hiperparâmetro)
+#Avaliação Final no Conjunto de Teste (Usando o melhor hiperparâmetro)
 # Treina o modelo final com todos os dados de treino padronizados
 pls_final = PLSRegression(n_components=best_n_components)
 pls_final.fit(X_train_scaled, y_train)
@@ -83,10 +88,13 @@ print(f"RMSE no Teste: {test_rmse:.4f}")
 print(f"R2 no Teste:   {test_r2:.4f}")
 print("-" * 50)
 
-# 7. Geração dos Gráficos (Perfil da CV e Predição Final)
+#Gráficos (Perfil da CV e Predição Final)
 plt.figure(figsize=(18, 5))
 
+#Os dois primeiros gráficos são o   perfil da validação cruzada
+
 # Gráfico 1: Perfil do RMSE na Validação Cruzada
+#linha tracejada vermelha marca onde ocorre o menor erro.
 plt.subplot(1, 3, 1)
 plt.plot(components_range, cv_rmse, marker='o', color='blue', label='RMSE Validação')
 plt.axvline(best_n_components, color='red', linestyle='--', label=f'Ideal = {best_n_components}')
@@ -98,6 +106,7 @@ plt.legend()
 plt.grid(True)
 
 # Gráfico 2: Perfil do R2 na Validação Cruzada
+#Mostra a curva de aprendizado em termos de R^2. A linha vermelha novamente marca o ponto ideal.
 plt.subplot(1, 3, 2)
 plt.plot(components_range, cv_r2, marker='s', color='green', label=r'$R^2$ Validação')
 plt.axvline(best_n_components, color='red', linestyle='--', label=f'Ideal = {best_n_components}')
@@ -107,6 +116,10 @@ plt.ylabel(r'$R^2$ (Maior é melhor)')
 plt.xticks(components_range)
 plt.legend()
 plt.grid(True)
+
+'''Gráfico 3 é opcional, ele mostra a linha vermelha de "Acerto Perfeito" (45 graus) e a 
+nuvem de pontos das suas previsões. Isso ajuda a diagnosticar visualmente se o modelo está 
+subestimando ou superestimando os valores'''
 
 # Gráfico 3: Performance Final - Real vs Predito no Teste
 plt.subplot(1, 3, 3)
