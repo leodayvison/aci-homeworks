@@ -88,14 +88,12 @@ print(f"RMSE no Teste: {test_rmse:.4f}")
 print(f"R2 no Teste:   {test_r2:.4f}")
 print("-" * 50)
 
-#Gráficos (Perfil da CV e Predição Final)
-plt.figure(figsize=(18, 5))
-
-#Os dois primeiros gráficos são o   perfil da validação cruzada
+# Gráficos (Perfil da CV)
+plt.figure(figsize=(14, 5))
 
 # Gráfico 1: Perfil do RMSE na Validação Cruzada
-#linha tracejada vermelha marca onde ocorre o menor erro.
-plt.subplot(1, 3, 1)
+# Linha tracejada vermelha marca onde ocorre o menor erro.
+plt.subplot(1, 2, 1)
 plt.plot(components_range, cv_rmse, marker='o', color='blue', label='RMSE Validação')
 plt.axvline(best_n_components, color='red', linestyle='--', label=f'Ideal = {best_n_components}')
 plt.title('Perfil da Validação Cruzada (RMSE)')
@@ -106,8 +104,8 @@ plt.legend()
 plt.grid(True)
 
 # Gráfico 2: Perfil do R2 na Validação Cruzada
-#Mostra a curva de aprendizado em termos de R^2. A linha vermelha novamente marca o ponto ideal.
-plt.subplot(1, 3, 2)
+# Mostra a curva de aprendizado em termos de R².
+plt.subplot(1, 2, 2)
 plt.plot(components_range, cv_r2, marker='s', color='green', label=r'$R^2$ Validação')
 plt.axvline(best_n_components, color='red', linestyle='--', label=f'Ideal = {best_n_components}')
 plt.title(r'Perfil da Validação Cruzada ($R^2$)')
@@ -117,11 +115,14 @@ plt.xticks(components_range)
 plt.legend()
 plt.grid(True)
 
+plt.tight_layout()
+plt.show()
+
 '''Gráfico 3 é opcional, ele mostra a linha vermelha de "Acerto Perfeito" (45 graus) e a 
 nuvem de pontos das suas previsões. Isso ajuda a diagnosticar visualmente se o modelo está 
 subestimando ou superestimando os valores'''
 
-# Gráfico 3: Performance Final - Real vs Predito no Teste
+'''# Gráfico 3: Performance Final - Real vs Predito no Teste
 plt.subplot(1, 3, 3)
 plt.scatter(y_test, y_pred_test, alpha=0.7, edgecolors='k', color='purple', label='Previsões')
 # Linha ideal de 45 graus onde Previsão = Real
@@ -132,7 +133,7 @@ plt.title('Teste Final: Valores Reais vs. Preditos')
 plt.xlabel('Valores Reais')
 plt.ylabel('Valores Preditos')
 plt.legend()
-plt.grid(True)
+plt.grid(True)'''
 
 plt.tight_layout()
 plt.show()
